@@ -242,7 +242,7 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
                     int v0 = getbits(mp, k);
                     int v1 = getbits(mp, k);
                     int v2 = getbits(mp, k);
-                    cm = muls[k][x1] * 2;
+                    cm = muls[k][x1];
                     r0 = (v0 + d1) * cm;
                     r1 = (v1 + d1) * cm;
                     r2 = (v2 + d1) * cm;
@@ -285,7 +285,7 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
                     unsigned char x1 = si->scalefactor[i][ch][gr];
                     assert( x1 < 64 );
                     x1 = (x1 < 64) ? x1 : 63;
-                    cm = muls[k][x1] * 2;
+                    cm = muls[k][x1];
                     r0 = (v0 + d1) * cm;
                     r1 = (v1 + d1) * cm;
                     r2 = (v2 + d1) * cm;
@@ -368,8 +368,7 @@ decode_layer2_sideinfo(PMPSTR mp)
 int
 decode_layer2_frame(PMPSTR mp, unsigned char *pcm_sample, int *pcm_point)
 {
-
-	real    fraction[2][4][SBLIMIT]; /* pick_table clears unused subbands */
+    real    fraction[2][4][SBLIMIT]; /* pick_table clears unused subbands */
     sideinfo_layer_II si;
     struct frame *fr = &(mp->fr);
     int     single = fr->single;

@@ -1558,9 +1558,6 @@ parse_args_(lame_global_flags * gfp, int argc, char **argv,
                     if (argUsed) 
                         (void) lame_set_out_samplerate(gfp, resample_rate(double_value));
 
-                T_ELIF("test")
-                    printf("%s\n", "test");
-
                 T_ELIF("vbr-old")
                     lame_set_VBR(gfp, vbr_rh);
 

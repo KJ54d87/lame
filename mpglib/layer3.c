@@ -1749,12 +1749,7 @@ decode_layer3_sideinfo(PMPSTR mp)
     return databits - 8 * mp->sideinfo.main_data_begin;
 }
 
-void handleScale(int gr, int scalefactors[][39], int ch){
-	for (int sub_band=0; sub_band<39; sub_band++){
-		scalefactors[ch][sub_band]*=10;
-		printf("gr %d, scalefactor[%d][%d] %d \n", gr, ch, sub_band, scalefactors[ch][sub_band]);
-	}
-}
+
 
 int
 decode_layer3_frame(PMPSTR mp, unsigned char *pcm_sample, int *pcm_point,
@@ -1772,9 +1767,6 @@ decode_layer3_frame(PMPSTR mp, unsigned char *pcm_sample, int *pcm_point,
     int     stereo1, granules;
     real    hybridIn[2][SBLIMIT][SSLIMIT];
     real    hybridOut[2][SSLIMIT][SBLIMIT];
-
-    //experimental doubling code
-    int doubledscalfacs[2][39];
 
     if (set_pointer(mp, (int) mp->sideinfo.main_data_begin) == MP3_ERR)
         return 0;
@@ -1810,41 +1802,38 @@ decode_layer3_frame(PMPSTR mp, unsigned char *pcm_sample, int *pcm_point,
             long    part2bits;
 
             if (fr->lsf)
-                part2bits = III_get_scale_factors_2(mp, doubledscalfacs[0], gr_infos, 0);
+                part2bits = III_get_scale_factors_2(mp, scalefacs[0], gr_infos, 0);
             else {
-                part2bits = III_get_scale_factors_1(mp, doubledscalfacs[0], gr_infos);
+                part2bits = III_get_scale_factors_1(mp, scalefacs[0], gr_infos);
             }
             if (mp->pinfo != NULL) {
                 int     i;
                 mp->pinfo->sfbits[gr][0] = part2bits;
                 for (i = 0; i < 39; i++)
-                    mp->pinfo->sfb_s[gr][0][i] = doubledscalfacs[0][i];
+                    mp->pinfo->sfb_s[gr][0][i] = scalefacs[0][i];
             }
-            //printf("gr %d, scalefactor \n", gr);
-            handleScale(gr, doubledscalfacs, 0);
 
             /* lame_report_fnc(mp->report_err, "calling III dequantize sample 1 gr_infos->part2_3_length %d\n", gr_infos->part2_3_length); */
-            if (III_dequantize_sample(mp, hybridIn[0], doubledscalfacs[0], gr_infos, sfreq, part2bits))
+            if (III_dequantize_sample(mp, hybridIn[0], scalefacs[0], gr_infos, sfreq, part2bits))
                 return clip;
         }
         if (stereo == 2) {
             struct gr_info_s *gr_infos = &(mp->sideinfo.ch[1].gr[gr]);
             long    part2bits;
             if (fr->lsf)
-                part2bits = III_get_scale_factors_2(mp, doubledscalfacs[1], gr_infos, i_stereo);
+                part2bits = III_get_scale_factors_2(mp, scalefacs[1], gr_infos, i_stereo);
             else {
-                part2bits = III_get_scale_factors_1(mp, doubledscalfacs[1], gr_infos);
+                part2bits = III_get_scale_factors_1(mp, scalefacs[1], gr_infos);
             }
             if (mp->pinfo != NULL) {
                 int     i;
                 mp->pinfo->sfbits[gr][1] = part2bits;
                 for (i = 0; i < 39; i++)
-                    mp->pinfo->sfb_s[gr][1][i] = doubledscalfacs[1][i];
+                    mp->pinfo->sfb_s[gr][1][i] = scalefacs[1][i];
             }
-            //handleScale(gr, doubledscalfacs, 1);
 
             /* lame_report_fnc(mp->report_err, "calling III dequantize sample 2  gr_infos->part2_3_length %d\n", gr_infos->part2_3_length); */
-            if (III_dequantize_sample(mp, hybridIn[1], doubledscalfacs[1], gr_infos, sfreq, part2bits))
+            if (III_dequantize_sample(mp, hybridIn[1], scalefacs[1], gr_infos, sfreq, part2bits))
                 return clip;
 
             if (ms_stereo) {
@@ -1859,7 +1848,7 @@ decode_layer3_frame(PMPSTR mp, unsigned char *pcm_sample, int *pcm_point,
             }
 
             if (i_stereo)
-                III_i_stereo(hybridIn, doubledscalfacs[1], gr_infos, sfreq, ms_stereo, fr->lsf);
+                III_i_stereo(hybridIn, scalefacs[1], gr_infos, sfreq, ms_stereo, fr->lsf);
 
             if (ms_stereo || i_stereo || (single == 3)) {
                 if (gr_infos->maxb > mp->sideinfo.ch[0].gr[gr].maxb)

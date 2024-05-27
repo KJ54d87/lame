@@ -408,6 +408,7 @@ decodeMP3_clipchoice(PMPSTR mp, unsigned char *in, int isize, char *out, int *do
                      int (*synth_1to1_ptr) (PMPSTR, real *, int, unsigned char *, int *))
 {
     int     i, iret, bits, bytes;
+
     if (in && isize && addbuf(mp, in, isize) == NULL)
         return MP3_ERR;
 
@@ -693,7 +694,7 @@ decodeMP3_clipchoice(PMPSTR mp, unsigned char *in, int isize, char *out, int *do
 int
 decodeMP3(PMPSTR mp, unsigned char *in, int isize, char *out, int osize, int *done)
 {
-	if (osize < 4608) {
+    if (osize < 4608) {
         lame_report_fnc(mp->report_err, "hip: Insufficient memory for decoding buffer %d\n", osize);
         return MP3_ERR;
     }

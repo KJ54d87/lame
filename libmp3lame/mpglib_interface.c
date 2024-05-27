@@ -139,7 +139,6 @@ decode1_headersB_clipchoice(PMPSTR pmp, unsigned char *buffer, size_t len,
         {0, 384, 1152, 576} /* MPEG-2(.5) */
     };
 
-
     int     processed_bytes;
     int     processed_samples; /* processed samples per channel */
     int     ret;
@@ -434,7 +433,6 @@ hip_decode1_headersB(hip_t hip, unsigned char *buffer,
                       int *enc_delay, int *enc_padding)
 {
     static char out[OUTSIZE_CLIPPED];
-
     if (hip) {
         return decode1_headersB_clipchoice(hip, buffer, len, (char *) pcm_l, (char *) pcm_r, mp3data,
                                            enc_delay, enc_padding, out, OUTSIZE_CLIPPED,

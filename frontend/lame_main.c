@@ -530,8 +530,7 @@ lame_encoder(lame_global_flags * gf, FILE * outf, int nogap, char *inPath, char 
 int
 lame_main(lame_t gf, int argc, char **argv)
 {
-    printf("%s\n", "dog debug");
-	char    inPath[PATH_MAX + 1];
+    char    inPath[PATH_MAX + 1];
     char    outPath[PATH_MAX + 1];
     char    nogapdir[PATH_MAX + 1];
     /* support for "nogap" encoding of up to 200 .wav files */

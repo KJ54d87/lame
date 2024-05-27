@@ -188,7 +188,7 @@ my_debug->OutPut(DEBUG_LEVEL_FUNC_DEBUG, "enter DecodeStream::ConvertBuffer");
 }
 
 	int ProcessedBytes;
-    //printf("%s\n", "dubug");
+
 	int ret = decodeMP3(&my_DecodeData, a_StreamHeader->pbSrc, a_StreamHeader->cbSrcLength, (char *)a_StreamHeader->pbDst, a_StreamHeader->cbDstLength, &ProcessedBytes);
 
 	switch (ret)

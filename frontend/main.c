@@ -455,9 +455,7 @@ char* lame_getenv(char const* var)
 
 int main(int argc, char *argv[])
 {
-	printf("%s\n", "main");
-
-	return c_main(argc, argv);
+    return c_main(argc, argv);
 }
 
 #endif
