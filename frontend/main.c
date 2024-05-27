@@ -86,7 +86,7 @@ char   *strchr(), *strrchr();
 #include <dmalloc.h>
 #endif
 
-
+lame_t  gf;
 static int c_main(int argc, char *argv[]);
 extern int lame_main(lame_t gf, int argc, char *argv[]);
 
@@ -466,7 +466,7 @@ int main(int argc, char *argv[])
 static int
 c_main(int argc, char *argv[])
 {
-    lame_t  gf;
+    //lame_t  gf;
     int     ret;
 
 #if macintosh

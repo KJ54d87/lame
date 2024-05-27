@@ -30,6 +30,8 @@
 #include "layer2.h"
 #include "l2tables.h"
 #include "decode_i386.h"
+#include "lame_global_flags.h"
+#include "lame.h"
 
 #ifdef WITH_DMALLOC
 #include <dmalloc.h>
@@ -42,7 +44,7 @@ static unsigned char grp_3tab[32 * 3] = { 0, }; /* used: 27 */
 static unsigned char grp_5tab[128 * 3] = { 0, }; /* used: 125 */
 static unsigned char grp_9tab[1024 * 3] = { 0, }; /* used: 729 */
 
-
+extern lame_t  gf;
 void
 hip_init_tables_layer2(void)
 {
@@ -222,6 +224,7 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
     int     jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ? (fr->mode_ext << 2) + 4 : fr->II_sblimit;
     int     i, ch, nch = fr->stereo;
     double  cm, r0, r1, r2;
+    long long to_double = gf->doubled_subbands;
 
     if (jsbound > sblimit)
         jsbound = sblimit;
@@ -319,6 +322,21 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
         }
         alloc1 += ((size_t)1 << step);
     }
+
+    //printf("%d \n", sblimit);
+    for (i = 0; i < sblimit; i++) {
+    	int is_double = to_double & 1;
+    	to_double /= 2;
+    	if (is_double == 1){
+    		//printf ("amp");
+    		for (int ch = 0; ch < nch; ch++){
+    			fraction[ch][0][i] *= 2;
+    			fraction[ch][1][i] *= 2;
+    			fraction[ch][2][i] *= 2;
+    		}
+    	}
+    }
+
     if (sblimit > fr->down_sample_sblimit) {
         sblimit = fr->down_sample_sblimit; 
     }

@@ -179,6 +179,14 @@ lame_get_scale_right(const lame_global_flags * gfp)
     return 0;
 }
 
+int
+lame_set_subband_doubling (lame_global_flags * gfp, long long subbands){
+       if (is_lame_global_flags_valid(gfp)) {
+               gfp -> doubled_subbands = subbands;
+               return 0;
+       }
+       return -1;
+}
 
 /* output sample rate in Hz */
 int

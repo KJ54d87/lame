@@ -224,6 +224,7 @@ float CDECL lame_get_scale_right(const lame_global_flags *);
 int CDECL lame_set_out_samplerate(lame_global_flags *, int);
 int CDECL lame_get_out_samplerate(const lame_global_flags *);
 
+int CDECL lame_set_subband_doubling (lame_global_flags *, long long);
 
 /********************************************************************
  *  general control parameters

@@ -23,7 +23,7 @@
 /* $Id: parse.c,v 1.307 2017/09/26 12:25:07 robert Exp $ */
 
 #ifdef HAVE_CONFIG_H
-# include <config.h>
+#include <config.h>
 #endif
 
 #include <assert.h>
@@ -311,6 +311,16 @@ static int getIntValue(char const* token, char const* arg, int* ptr)
 {
     char *_EndPtr=0;
     long d = strtol(arg, &_EndPtr, 10);
+    if (ptr != 0) {
+        *ptr = d;
+    }
+    return evaluateArgument(token, arg, _EndPtr);
+}
+
+static int getLongLongValue(char const* token, char const* arg, long long* ptr)
+{
+    char *_EndPtr=0;
+    long d = strtoll(arg, &_EndPtr, 10);
     if (ptr != 0) {
         *ptr = d;
     }
@@ -1551,12 +1561,19 @@ parse_args_(lame_global_flags * gfp, int argc, char **argv,
             if (*token == '-') { /* GNU style */
                 double  double_value = 0;
                 int     int_value = 0;
+                long long long_long_value = 0;
                 token++;
 
                 T_IF("resample")
                     argUsed = getDoubleValue(token, nextArg, &double_value);
                     if (argUsed) 
                         (void) lame_set_out_samplerate(gfp, resample_rate(double_value));
+
+                T_ELIF("subband-doubling")
+                    argUsed = getLongLongValue(token, nextArg, &long_long_value);
+                	printf("%lld \n", long_long_value);
+                    if (argUsed)
+                        (void) lame_set_subband_doubling(gfp, long_long_value);
 
                 T_ELIF("vbr-old")
                     lame_set_VBR(gfp, vbr_rh);

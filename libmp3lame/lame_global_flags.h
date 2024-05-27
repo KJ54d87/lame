@@ -41,6 +41,8 @@ struct lame_global_struct {
                                 amount before encoding                      */
     float   scale_right;     /* scale input of channel 1 (right) by this
                                 amount before encoding                      */
+    long long doubled_subbands; /* subbands to double, 1st bit corresponds
+                                   first channel, & so on. default = 0*/
 
     /* general control params */
     int     analysis;        /* collect data for a MP3 frame analyzer?      */
