@@ -224,7 +224,8 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
     int     jsbound = (fr->mode == MPG_MD_JOINT_STEREO) ? (fr->mode_ext << 2) + 4 : fr->II_sblimit;
     int     i, ch, nch = fr->stereo;
     double  cm, r0, r1, r2;
-    long long to_double = gf->doubled_subbands;
+    long long to_double = gf->increased_subbands;
+    int factor = gf -> increase_by;
 
     if (jsbound > sblimit)
         jsbound = sblimit;
@@ -246,13 +247,14 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
                     int v1 = getbits(mp, k);
                     int v2 = getbits(mp, k);
                     cm = muls[k][x1];
+                    //printf("%f \n", cm);
                     r0 = (v0 + d1) * cm;
                     r1 = (v1 + d1) * cm;
                     r2 = (v2 + d1) * cm;
                 }
                 else {
                     unsigned int idx = getbits(mp, k);
-                    unsigned char *tab = grp_table_select(d1, idx);
+                    unsigned char *tab = grp_table_select(d1, idx); //this looks like it has to do with quantization, very weird. Also, it looks like this is returning an array of zeroes
                     unsigned char k0 = tab[0];
                     unsigned char k1 = tab[1];
                     unsigned char k2 = tab[2];
@@ -323,16 +325,20 @@ II_step_two(PMPSTR mp, sideinfo_layer_II* si, struct frame *fr, int gr, real fra
         alloc1 += ((size_t)1 << step);
     }
 
-    //printf("%d \n", sblimit);
+    //printf("new! \n");
     for (i = 0; i < sblimit; i++) {
     	int is_double = to_double & 1;
     	to_double /= 2;
     	if (is_double == 1){
     		//printf ("amp");
     		for (int ch = 0; ch < nch; ch++){
-    			fraction[ch][0][i] *= 2;
-    			fraction[ch][1][i] *= 2;
-    			fraction[ch][2][i] *= 2;
+    			for (int b = 0; b<3; b++){
+    				if (fraction[ch][b][i] * factor > 64){
+    					fraction[ch][b][i] = 64;
+    				} else {
+    					fraction[ch][b][i] *= factor;
+    				}
+    			}
     		}
     	}
     }

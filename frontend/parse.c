@@ -1569,11 +1569,16 @@ parse_args_(lame_global_flags * gfp, int argc, char **argv,
                     if (argUsed) 
                         (void) lame_set_out_samplerate(gfp, resample_rate(double_value));
 
-                T_ELIF("subband-doubling")
+                T_ELIF("subband-increasing")
                     argUsed = getLongLongValue(token, nextArg, &long_long_value);
-                	printf("%lld \n", long_long_value);
+                	//printf("%lld \n", long_long_value);
                     if (argUsed)
-                        (void) lame_set_subband_doubling(gfp, long_long_value);
+                        (void) lame_set_subband_increasing(gfp, long_long_value);
+
+                T_ELIF("increase-amount")
+                    argUsed = getIntValue(token, nextArg, &int_value);
+                    if (argUsed)
+                        (void) lame_set_subband_increase_amount(gfp, int_value);
 
                 T_ELIF("vbr-old")
                     lame_set_VBR(gfp, vbr_rh);

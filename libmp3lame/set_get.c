@@ -180,9 +180,18 @@ lame_get_scale_right(const lame_global_flags * gfp)
 }
 
 int
-lame_set_subband_doubling (lame_global_flags * gfp, long long subbands){
+lame_set_subband_increasing (lame_global_flags * gfp, long long subbands){
        if (is_lame_global_flags_valid(gfp)) {
-               gfp -> doubled_subbands = subbands;
+               gfp -> increased_subbands = subbands;
+               return 0;
+       }
+       return -1;
+}
+
+int
+lame_set_subband_increase_amount (lame_global_flags * gfp, int increase){
+       if (is_lame_global_flags_valid(gfp)) {
+               gfp -> increase_by = increase;
                return 0;
        }
        return -1;

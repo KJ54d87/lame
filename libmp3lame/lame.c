@@ -2387,7 +2387,7 @@ lame_init_old(lame_global_flags * gfp)
 
     memset(gfp, 0, sizeof(lame_global_flags));
 
-    gfp->doubled_subbands = 0;
+    gfp->increased_subbands = 0;
 
     gfp->class_id = LAME_ID;
 
